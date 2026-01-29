@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome to your Reading Tracker!</h2>
+
+<!-- Form to add a reading log -->
+<form method="post">
+    <label>Book Name:</label>
+    <input type="text" name="book_name" required><br>
+    <label>Page Start:</label>
+    <input type="number" name="page_start" required><br>
+    <label>Page End:</label>
+    <input type="number" name="page_end" required><br>
+    <button type="submit">Add Log</button>
+</form>
+
+<hr>
+
+<!-- Display logs -->
+{% if logs %}
+    <h3>Reading Logs</h3>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Book</th>
+            <th>Start Page</th>
+            <th>End Page</th>
+            <th>Date</th>
+        </tr>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.book.name }}</td>
+            <td>{{ log.page_start }}</td>
+            <td>{{ log.page_end }}</td>
+            <td>{{ log.created_at }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No logs yet.</p>
+{% endif %}
+
+{% endblock %}
