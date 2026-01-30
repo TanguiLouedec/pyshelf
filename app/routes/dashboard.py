@@ -16,11 +16,14 @@ router = APIRouter()
 @router.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
     db = SessionLocal()
+
     logs = db.query(Log).options(joinedload(Log.book)).all()
     books = db.query(Book).all()
+
     db.close()
 
     context = {"request": request, "title": "Dashboard", "logs": logs, "books": books}
+
     return templates.TemplateResponse("dashboard.html", context)
 
 
@@ -35,7 +38,11 @@ async def add_log(request: Request,
     
     db = SessionLocal()
 
+    book = db.query(Book).filter(Book.id == book_id).first()
+    book.last_read_page = page_end
+
     log = Log(book_id = book_id, page_start = page_start, page_end = page_end)
+
     db.add(log)
     db.commit()
 
@@ -51,7 +58,7 @@ async def add_book(request: Request,
     
     db = SessionLocal()
 
-    book = Book(name = book_name, author = author, page_count = page_count)
+    book = Book(name = book_name, author = author, page_count = page_count, last_read_page = 0)
     db.add(book) 
     db.commit()
 

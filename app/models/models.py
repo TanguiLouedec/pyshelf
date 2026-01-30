@@ -19,6 +19,7 @@ class Book(Base):
     name = Column(String, unique=True, nullable=False)
     author = Column(String, unique=True, nullable=False)
     page_count = Column(Integer, nullable=True)
+    last_read_page = Column(Integer, nullable=True)
 
     logs = relationship("Log", back_populates="book")
 

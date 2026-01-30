@@ -6,14 +6,14 @@
 
 <form method="post" action="/logs/add">
     <label>Book:</label>
-    <select name = "book_id" required>
+    <select name="book_id" id="book_select" required>
         {% for book in books %}
-            <option value="{{ book.id }}">{{ book.name }}, {{ book.author }}</option>
+            <option value="{{ book.id }}" data-last-page="{{ book.last_read_page or 1 }}">{{ book.name }}, {{ book.author }}</option>
         {% endfor %}
     </select>
     <br>
     <label>Page Start:</label>
-    <input type="number" name="page_start" required><br>
+    <input type="number" name="page_start" id="page_start" required><br>
     <label>Page End:</label>
     <input type="number" name="page_end" required><br>
     <button type="submit">Add Log</button>
@@ -62,14 +62,31 @@
         <tr>
             <th>Title</th>
             <th>Author</th>
+            <th>Bookmark</th>
         </tr>
         {% for book in books %}
         <tr>
             <td>{{ book.name }}</td>
             <td>{{ book.author }}</td>
+            <td>{{ book.last_read_page }}</td>
         </tr>
         {% endfor %}
     </table>
 {% endif %}
+
+<script>
+    const bookSelect = document.getElementById("book_select")
+    const pageStartInput = document.getElementById("page_start")
+
+    function updatePageStart() {
+        const selectedOption = bookSelect.options[bookSelect.selectedIndex]
+        const lastPage = selectedOption.dataset.lastPage
+        pageStartInput.value = lastPage
+    }
+
+    updatePageStart()
+
+    bookSelect.addEventListener("change", updatePageStart)
+</script>
 
 {% endblock %}
