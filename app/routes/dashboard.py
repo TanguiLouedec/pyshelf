@@ -15,20 +15,18 @@ router = APIRouter()
 
 @router.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
-    """
-    Render dashboard with logs and form
-    """
     db = SessionLocal()
     logs = db.query(Log).options(joinedload(Log.book)).all()
+    books = db.query(Book).all()
     db.close()
 
-    context = {"request": request, "title": "Dashboard", "logs": logs}
+    context = {"request": request, "title": "Dashboard", "logs": logs, "books": books}
     return templates.TemplateResponse("dashboard.html", context)
 
 
-@router.post("/", response_class=HTMLResponse)
+@router.post("/logs/add", response_class=HTMLResponse)
 async def add_log(request: Request,
-                  book_name: str = Form(...),
+                  book_id: int = Form(...),
                   page_start: int = Form(...),
                   page_end: int = Form(...)):
     
@@ -37,18 +35,26 @@ async def add_log(request: Request,
     
     db = SessionLocal()
 
-    book = db.query(Book).filter(Book.name == book_name).first()
-    if not book:
-        book = Book(name = book_name)
-        db.add(book)
-        db.commit()
-        db.refresh(book)
-
-    log = Log(book_id = book.id, page_start = page_start, page_end = page_end)
+    log = Log(book_id = book_id, page_start = page_start, page_end = page_end)
     db.add(log)
     db.commit()
 
-    logs = db.query(Log).all()
+    db.close()
+
+    return RedirectResponse("/", status_code=303)
+
+@router.post("/books/add", response_class=HTMLResponse)
+async def add_book(request: Request,
+                   book_name: str = Form(...),
+                   author: str = Form(...),
+                   page_count: int = Form(...)):
+    
+    db = SessionLocal()
+
+    book = Book(name = book_name, author = author, page_count = page_count)
+    db.add(book) 
+    db.commit()
+
     db.close()
 
     return RedirectResponse("/", status_code=303)

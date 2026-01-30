@@ -3,17 +3,32 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h2>Welcome to your Reading Tracker!</h2>
 
-<!-- Form to add a reading log -->
-<form method="post">
-    <label>Book Name:</label>
-    <input type="text" name="book_name" required><br>
+<form method="post" action="/logs/add">
+    <label>Book:</label>
+    <select name = "book_id" required>
+        {% for book in books %}
+            <option value="{{ book.id }}">{{ book.name }}, {{ book.author }}</option>
+        {% endfor %}
+    </select>
+    <br>
     <label>Page Start:</label>
     <input type="number" name="page_start" required><br>
     <label>Page End:</label>
     <input type="number" name="page_end" required><br>
     <button type="submit">Add Log</button>
+</form>
+
+<hr>
+
+<form method="post" action="/books/add">
+    <label>Title:</label>
+    <input type="text" name="book_name" required><br>
+    <label>Author:</label>
+    <input type="text" name="author" required><br>
+    <label>Page count:</label>
+    <input type="number" name="page_count" required><br>
+    <button type="submit">Add book</button>
 </form>
 
 <hr>
@@ -39,6 +54,22 @@
     </table>
 {% else %}
     <p>No logs yet.</p>
+{% endif %}
+
+{% if books %}
+    <h3>Books</h3>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.name }}</td>
+            <td>{{ book.author }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 {% endif %}
 
 {% endblock %}

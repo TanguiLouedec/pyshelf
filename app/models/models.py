@@ -17,6 +17,7 @@ class Book(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, nullable=False)
+    author = Column(String, unique=True, nullable=False)
     page_count = Column(Integer, nullable=True)
 
     logs = relationship("Log", back_populates="book")
