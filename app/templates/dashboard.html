@@ -3,40 +3,59 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <form method="post" action="/logs/add">
+                <div class="mb-3">
+                    <label class="form-label">Book</label>
+                    <select name="book_id" id="book_select" required class="form-select">
+                        {% for book in books %}
+                            <option value="{{ book.id }}" data-last-page="{{ book.last_read_page or 1 }}">{{ book.name }}, {{ book.author }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-<form method="post" action="/logs/add">
-    <label>Book:</label>
-    <select name="book_id" id="book_select" required>
-        {% for book in books %}
-            <option value="{{ book.id }}" data-last-page="{{ book.last_read_page or 1 }}">{{ book.name }}, {{ book.author }}</option>
-        {% endfor %}
-    </select>
-    <br>
-    <label>Page Start:</label>
-    <input type="number" name="page_start" id="page_start" required><br>
-    <label>Page End:</label>
-    <input type="number" name="page_end" required><br>
-    <button type="submit">Add Log</button>
-</form>
+                <div class="mb-3">
+                    <label class="form-label">Page Start</label>
+                    <input type="number" name="page_start" id="page_start" required class="form-control">
+                </div>
 
-<hr>
+                <div class="mb-3">
+                    <label class="form-label">Page End</label>
+                    <input type="number" name="page_end" required class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Add Log</button>
+            </form>
+        </div>
+        <div class="col">
+            <form method="post" action="/books/add">
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text" name="book_name" required class="form-control">
+                </div>
 
-<form method="post" action="/books/add">
-    <label>Title:</label>
-    <input type="text" name="book_name" required><br>
-    <label>Author:</label>
-    <input type="text" name="author" required><br>
-    <label>Page count:</label>
-    <input type="number" name="page_count" required><br>
-    <button type="submit">Add book</button>
-</form>
+                <div class="mb-3">
+                    <label class="form-label">Author</label>
+                    <input type="text" name="author" required class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Page count</label>
+                    <input type="number" name="page_count" required class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Add book</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <hr>
 
 <!-- Display logs -->
 {% if logs %}
     <h3>Reading Logs</h3>
-    <table border="1" cellpadding="5">
+    <table class="table">
         <tr>
             <th>Book</th>
             <th>Start Page</th>
@@ -58,7 +77,7 @@
 
 {% if books %}
     <h3>Books</h3>
-    <table border="1" cellpadding="5">
+    <table class="table">
         <tr>
             <th>Title</th>
             <th>Author</th>
